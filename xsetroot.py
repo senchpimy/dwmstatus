@@ -1,17 +1,14 @@
 import subprocess
 import sys
-#cpus=subprocess.Popen(["cat","/proc/stat", "|", "grep", "'cpu'"])
+import psutil
 
 def create_cpu_line(num):
     return f"^c#53545e^^r3,2,3,14^^c#3fd113^^r3,2,3,{int((num/100)*14)}^^f5^".replace(" ","")
 
 def create_cpu_lines():
     porcentajes_cpu=[]
-    cpus=subprocess.check_output("cat /proc/stat | grep 'cpu'|tail -n +2",shell=True,text=True)
-    for i in cpus.splitlines():
-        line=i.split()
-        porcentaje=((int(line[1])+int(line[3]))*100) / (int(line[1])+int(line[3])+int(line[4]))
-        porcentajes_cpu.append(create_cpu_line(porcentaje))
+    for i in psutil.cpu_percent(percpu=True,interval=0.1):
+        porcentajes_cpu.append(create_cpu_line(i))
     return porcentajes_cpu
 
 def mem_line():
