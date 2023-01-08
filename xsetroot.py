@@ -1,6 +1,6 @@
-import subprocess
-import sys
+#!/bin/python3
 import psutil
+import sys
 
 def create_cpu_line(num):
     return f"^c#53545e^^r3,2,3,14^^c#3fd113^^r3,2,3,{int((num/100)*14)}^^f5^".replace(" ","")
@@ -12,9 +12,8 @@ def create_cpu_lines():
     return porcentajes_cpu
 
 def mem_line():
-    mem=subprocess.check_output("cat /proc/meminfo | head -n 1 -n 2",shell=True, text=True).split()
-    total=int(mem[1])
-    free=int(mem[4])
+    total = psutil.virtual_memory().total
+    free = psutil.virtual_memory().used
     string=f"^c#53545e^^r0,2,35,15^^c#e82b0e^^r0,2,{int((free/total)*35)},15^^f35^"
     return string
 
